@@ -53,8 +53,9 @@
         <div class="columns is-centered">
           <div class="column has-text-centered">
             <h1 class="title is-1 publication-title">DriveSceneGen: Generating Diverse and Realistic Driving Scenarios from Scratch</h1>
-            <div class="is-size-5 publication-authors">
-              <!-- Paper authors -->
+            
+            <!-- Paper authors -->
+            <!-- <div class="is-size-5 publication-authors">
               <span class="author-block">
                 <a href="FIRST AUTHOR PERSONAL LINK" target="_blank">Shuo Sun</a><sup>&dagger;</sup>,
               </span>
@@ -77,8 +78,19 @@
                 <a href="THIRD AUTHOR PERSONAL LINK" target="_blank">Dongen Li</a>,
               </span>
               <span class="author-block">
-                <a href="THIRD AUTHOR PERSONAL LINK" target="_blank">Marcelo H. Ang Jr.</a>
+                <a href="THIRD AUTHOR PERSONAL LINK" target="_blank">and Marcelo H. Ang Jr.</a>
               </span>
+            </div> -->
+
+            <div class="is-size-5 publication-authors">
+              <span>Shuo Sun<sup>&dagger;</sup>,</span>
+              <span>Zekai Gu<sup>&dagger;</sup>,</span>
+              <span>Tianchen Sun<sup>&dagger;</sup>,</span>
+              <span>Jiawei Sun,</span>
+              <span>Chengran Yuan,</span>
+              <span>Yuhang Han,</span>
+              <span>Dongen Li,</span>
+              <span>and Marcelo H. Ang Jr.</span>
             </div>
 
             <div class="is-size-5 publication-authors">
@@ -99,7 +111,7 @@
                 </a>
               </span>
 
-              <div class="publication-links">
+              <!-- <div class="publication-links"> -->
               <!-- Arxiv PDF link -->
               <span class="link-block">
                 <a href="https://arxiv.org/pdf/<ARXIV PAPER ID>.pdf" target="_blank"
@@ -167,7 +179,7 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            Realistic and diverse traffic scenarios in large quantities are crucial for the development and validation of autonomous driving systems. However, owing to numerous difficulties in the data collection process and the reliance on intensive annotations, real-world datasets lack sufficient quantity and diversity to support the increasing demand for data. This work introduces DriveSceneGen, a data-driven driving scenario generation method that learns from the real- world driving dataset and generates entire dynamic driving scenarios from scratch. DriveSceneGen is able to generate novel driving scenarios that align with real-world data distributions with high fidelity and diversity. Experimental results on 5k generated scenarios highlight the generation quality, diversity, and scalability compared to real-world datasets. To the best of our knowledge, DriveSceneGen is the first method that generates novel driving scenarios involving both static map elements and dynamic traffic participants from scratch.
+            Realistic and diverse traffic scenarios in large quantities are crucial for the development and validation of autonomous driving systems. However, owing to numerous difficulties in the data collection process and the reliance on intensive annotations, real-world datasets lack sufficient quantity and diversity to support the increasing demand for data. This work introduces DriveSceneGen, a data-driven driving scenario generation method that learns from the real-world driving dataset and generates entire dynamic driving scenarios from scratch. DriveSceneGen is able to generate novel driving scenarios that align with real-world data distributions with high fidelity and diversity. Experimental results on 5k generated scenarios highlight the generation quality, diversity, and scalability compared to real-world datasets. To the best of our knowledge, DriveSceneGen is the first method that generates novel driving scenarios involving both static map elements and dynamic traffic participants from scratch.
           </p>
         </div>
       </div>
@@ -182,29 +194,26 @@
   <div class="hero-body">
     <div class="container">
       <div id="results-carousel" class="carousel results-carousel">
-       <div class="item">
-        <!-- Your image here -->
-        <img src="static/images/pipeline.pdf" alt="MY ALT TEXT"/>
+      
+      <div class="item">
+        <img src="static/images/pipeline.png" alt="MY ALT TEXT"/>
         <h2 class="subtitle has-text-centered">
           An overview of the DriveSceneGen pipeline. The pipeline consists of two stages: a generation stage and a simulation stage. In the generation stage, a diffusion model is employed to generate a rasterized Birds-Eye-View (BEV) representation of the initial scene of the driving scenario, which is then decoded by a rule-based vectorization method. In the simulation stage, the vectorized representation of the scenario is consumed by a simulation network as the initial scene to predict multi-modal joint distributions of the generated agents’ future trajectories, with each distribution representing a distinct possible outcome from this same initial scene.
         </h2>
       </div>
       <div class="item">
-        <!-- Your image here -->
         <img src="static/images/diversity.png" alt="MY ALT TEXT"/>
         <h2 class="subtitle has-text-centered">
           Qualitative results of the initial scenes generated by our model. 
         </h2>
       </div>
-      <div class="item">
-        <!-- Your image here -->
+      <!-- <div class="item">
         <img src="static/images/vectorization.png" alt="MY ALT TEXT"/>
         <h2 class="subtitle has-text-centered">
           A visualization of the results obtained at each stage of the proposed vectorization method. The example feature map used represents a scene of 80m × 80m.
        </h2>
-     </div>
+     </div> -->
      <div class="item">
-      <!-- Your image here -->
       <img src="static/images/simulation.png" alt="MY ALT TEXT"/>
       <h2 class="subtitle has-text-centered">
         Qualitative evaluation of the different possible future scenarios generated from the same initial scene. Comparing the scenarios in each column, each future scenario presents distinct agent behaviors starting from the same initial scene.
