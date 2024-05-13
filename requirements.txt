@@ -1,0 +1,16 @@
+Cython
+tensorflow==2.11.0
+waymo-open-dataset-tf-2-11-0==1.5.1
+torch==2.0.1
+torchvision==0.15.2
+torchaudio==2.0.2
+torchmetrics
+numpy==1.21.5
+scikit-image
+opencv-python
+shapely
+bezier[full]
+matplotlib
+tqdm
+diffusers==0.20.0
+accelerate==0.22.0
