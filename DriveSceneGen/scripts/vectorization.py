@@ -2,6 +2,8 @@ import glob
 import logging
 import multiprocessing
 import os
+import argparse
+import yaml
 
 import pickle
 import matplotlib.pyplot as plt
@@ -13,15 +15,13 @@ from tqdm import tqdm
 
 from DriveSceneGen.utils.io import get_logger
 from DriveSceneGen.utils.render import render_vectorized_scenario_on_axes
-from DriveSceneGen.vectorization.direct.extract_centerlines import extract_centerlines
 from DriveSceneGen.vectorization.direct.extract_vehicles import extract_agents
 from DriveSceneGen.vectorization.graph import image_to_polylines, image_to_vectors_graph
 
 logger = get_logger('vectorization', logging.WARNING)
 
 
-def vectorize(img_color: Image, method: str = "GRAPH_FIT", map_range: float = 80.0, plot: bool = True, 
-              graph_save_path: str = None, agents_save_path: str = None, pic_save_path: str = None) -> tuple:
+def vectorize(img_color: Image, method: str = "GRAPH_FIT", map_range: float = 80.0, plot: bool = True, pic_save_path: str = None) -> tuple:
     """
     Returns
     ---
@@ -36,10 +36,7 @@ def vectorize(img_color: Image, method: str = "GRAPH_FIT", map_range: float = 80
 
     try:
         # Extract centerlines
-        if method == "DIRECT":
-            lanes = extract_centerlines(img_tensor, plot_lane=plot)
-
-        elif method == "GRAPH":
+        if method == "GRAPH":
             lanes, graph = image_to_vectors_graph.extract_polylines_from_img(img_color, map_range=map_range, plot=plot, save_path=pic_save_path)
         
         elif method == "GRAPH_FIT":
@@ -87,7 +84,7 @@ def vectorize(img_color: Image, method: str = "GRAPH_FIT", map_range: float = 80
     return lanes, graph, agents, fig
 
 
-def multiprocessing_func(data_files, vectorized_dir: str, picture_dir: str, graph_dir: str, agent_dir: str, n_proc: int, proc_id: int):
+def multiprocessing_func(data_files: list, cfg: dict, vectorized_dir: str, picture_dir: str, graph_dir: str, agent_dir: str, n_proc: int, proc_id: int):
     for index, file in enumerate(tqdm(data_files)):
         with open(file, "rb") as f:
             img_id = index*n_proc + proc_id
@@ -100,7 +97,7 @@ def multiprocessing_func(data_files, vectorized_dir: str, picture_dir: str, grap
             agent_save_path = f'{agent_dir}/{img_id}_agents.npy'
             
             try:
-                lanes, graph, agents, fig = vectorize(img_color, method="GRAPH_FIT", map_range=160.0, plot=False, graph_save_path=graph_save_path, pic_save_path=pic_save_path)
+                lanes, graph, agents, fig = vectorize(img_color, method=cfg['method'], map_range=cfg['map_range'], plot=cfg['plot'], pic_save_path=pic_save_path)
                 
                 if fig is not None:
                     fig.savefig(f'{picture_dir}/{img_id}.png', transparent=True, format="png")
@@ -146,16 +143,19 @@ def chunks(input, n):
 
 
 if __name__ == "__main__":
-    n_proc = 8  # Numer of available processors
-    map_range = 160
+    parser = argparse.ArgumentParser(description='Vectorization')
+    parser.add_argument('--load_path',default="./data/preprocessed", type=str, help='path to dataset files')
+    parser.add_argument('--save_path', default="./data/rasterized/",type=str, help='path to save processed data')
+    parser.add_argument('--cfg_file', default="./DriveSceneGen/config/vectorization.yaml",type=str, help='path to cfg file')
     
-    # Ground Truth Dataset Paths
-    # input_dir = '/media/shuo/Chocolate/waymo/'
-    # generated_imgs_dir = os.path.join(input_dir, f'GT_diff_s{map_range}_70k_dxdy_agents_img')
-    # outputs_dir = '/media/shuo/Cappuccino/ground_truth'
+    sys_args = parser.parse_args()
+    with open(sys_args.cfg_file, 'r') as file:
+        cfg = yaml.safe_load(file)
+    n_proc = cfg['n_proccess']
+    map_range = cfg['vectoriztion']['map_range']
     
     # Generated Dataset Paths
-    input_dir = f'/media/shuo/Cappuccino/DriveSceneGen/generated_{map_range}m_5k'
+    input_dir = f'./data/generated_{map_range}m_5k'
     generated_imgs_dir = os.path.join(input_dir, 'diffusion')
     outputs_dir = input_dir
     
@@ -180,7 +180,7 @@ if __name__ == "__main__":
         """Execute the target function on the n_proc target processors using the splitted input"""
         p = multiprocessing.Process(
             target=multiprocessing_func,
-            args=(chunked_files[proc_id], vectorized_output_dir, vectorized_picture_dir, graph_dir, agent_dir, n_proc, proc_id),
+            args=(chunked_files[proc_id], cfg['vectoriztion'], vectorized_output_dir, vectorized_picture_dir, graph_dir, agent_dir, n_proc, proc_id),
         )
         processes.append(p)
         p.start()

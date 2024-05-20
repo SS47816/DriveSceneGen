@@ -22,8 +22,8 @@ class TrainingConfig:
     save_image_epochs = 1
     save_model_epochs = 1 # save model epoch
     mixed_precision = 'fp16'  # `no` for float32, `fp16` for automatic mixed precision
-    output_dir = 'traffic_diffuser_model_dxdy_agents_256_s80'  # the generated model name
-    dataset_name = "data/processed/stage2/GT_diff_s80_70k_dxdy_agents_img/*"
+    output_dir = './DriveSceneGen/model_dxdy_agents_256_s80'  # the generated model name
+    dataset_name = "./data/rasterized/GT_70k_s80_dxdy_agents_img/*"
     overwrite_output_dir = True  # overwrite the old model when re-running the notebook
     seed = 14555
 

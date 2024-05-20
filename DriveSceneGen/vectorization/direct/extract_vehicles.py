@@ -190,18 +190,10 @@ def extract_agents(raw_img: np.ndarray, lanes: np.ndarray, map_range: float = 80
         lane_yaw, dist = estimate_agent_yaw(agent[:2], lanes)
         if dist < dist_thresh:
             velocity = min(velocity, max_speed)
-            velocity = max(min_speed, velocity) # 0.5 + 0.5*(0.99*(1 / (1 + np.exp(-(velocity_scalar[i]+1.75)))))
+            velocity = max(min_speed, velocity)
         else:
             velocity = 0.0
             
-        # yaw_diff = np.fabs(normalize_angle_rad(agent[-3] - lane_yaw))
-        # if yaw_diff > np.deg2rad(90):
-        #     agent[-3] = normalize_angle_rad(agent[-3] + np.pi)  # yaw
-        #     agent[-2] = -agent[-2]  # velocity_x
-        #     agent[-1] = -agent[-1]  # velocity_y
-
-        # yaw_diff = np.fabs(normalize_angle_rad(agent[-3] - lane_yaw))
-        # if yaw_diff > np.deg2rad(45) and dist < dist_thresh:
         agent[-3] = lane_yaw  # yaw
         agent[-2] = velocity * np.cos(lane_yaw)  # velocity_x
         agent[-1] = velocity * np.sin(lane_yaw)  # velocity_y

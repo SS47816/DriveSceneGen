@@ -2,22 +2,23 @@ import glob
 import multiprocessing
 import os
 import pickle
-import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
 import argparse
+import yaml
 
 from torchvision import transforms
 from DriveSceneGen.utils.datasets.rasterization import rasterize_static_map
 
-def multiprocessing_func(data_files, tensor_output_dir, n_proc, proc_id):
+def multiprocessing_func(data_files, cfg, tensor_output_dir, n_proc, proc_id):
     # Settings
-    map_range = 40.0  # total size should x2
-    img_res = (512,512) # will be resized to 256x256
-    resize = False
-    scatter_size = 0.15
-    with_vehicle_rectangle=True
-    scatter_as_line=True
+    cfg = cfg['rasterization']
+    map_range = cfg['map_range']/2  # total size should x2
+    img_res = (cfg['img_res'], cfg['img_res']) # will be resized to 256x256
+    resize = cfg['resize']
+    scatter_size = cfg['scatter_size']
+    with_agent = cfg['with_agent']
+    scatter_as_line = cfg['scatter_as_line']
     
     for i, file in enumerate(tqdm(data_files)):
         with open(file, 'rb') as f:
@@ -31,7 +32,7 @@ def multiprocessing_func(data_files, tensor_output_dir, n_proc, proc_id):
         fig_tensor=rasterize_static_map(scenario_info, 
                                         img_res=img_res, 
                                         map_range=map_range, 
-                                        with_vehicle_rectangle=with_vehicle_rectangle,
+                                        with_agent=with_agent,
                                         scatter_as_line=scatter_as_line,
                                         resize=resize,
                                         scatter_size=scatter_size)
@@ -52,22 +53,22 @@ def chunks(input, n):
         yield input[i : i + n]
 
 if __name__ == "__main__":
-    n_proc = 8  # Numer of available processors
-    
-    parser = argparse.ArgumentParser(description='Data Processing')
-    parser.add_argument('--load_path',default="./data/processed", type=str, help='path to dataset files')
-    parser.add_argument('--save_path', default="./data/processed/stage2/",type=str, help='path to save processed data')
+    parser = argparse.ArgumentParser(description='Data Processing 2')
+    parser.add_argument('--load_path',default="./data/preprocessed", type=str, help='path to dataset files')
+    parser.add_argument('--save_path', default="./data/rasterized/",type=str, help='path to save processed data')
+    parser.add_argument('--cfg_file', default="./DriveSceneGen/config/data_rasterization.yaml",type=str, help='path to cfg file')
     
     sys_args = parser.parse_args()
-
-    sources_dir = sys_args.load_path
-    raw_data_dir = os.path.join(sources_dir, "stage1")
-
+    with open(sys_args.cfg_file, 'r') as file:
+        cfg = yaml.safe_load(file)
+    n_proc = cfg['n_proccess']
+    map_range = cfg['rasterization']['map_range']
+    raw_data_dir = sys_args.load_path
     output_dir = sys_args.save_path
-    tensor_output_dir= os.path.join(output_dir, "GT_diff_s80_70k_dxdy_agents_img")
+    tensor_output_dir= os.path.join(output_dir, f"GT_70k_s{map_range}_dxdy_agents_img")
     
     if not os.path.exists(tensor_output_dir):
-        os.mkdir(tensor_output_dir)
+        os.makedirs(tensor_output_dir, exist_ok=True)
     
     all_files = glob.glob(raw_data_dir + "/*")
     chunked_files = list(
@@ -79,7 +80,7 @@ if __name__ == "__main__":
         """Execute the target function on the n_proc target processors using the splitted input"""
         p = multiprocessing.Process(
             target=multiprocessing_func,
-            args=(chunked_files[i], tensor_output_dir, n_proc, i),
+            args=(chunked_files[i], cfg, tensor_output_dir, n_proc, i),
         )
         processes.append(p)
         p.start()

@@ -5,14 +5,14 @@ import torch.nn.functional as F
 from accelerate import Accelerator
 from tqdm.auto import tqdm
 import os
-import matplotlib.pyplot as plt
 import numpy as np
 
-####----evaluate---####
+
 class TrainingPipeline():
     def __init__(self,config):
         self.config = config
         
+    ####----evaluate---####
     def evaluate(self,config, epoch, pipeline):
         
         self.inverse_normalize = transforms.Compose([
@@ -43,7 +43,6 @@ class TrainingPipeline():
         toimage.save(f"{test_dir}/"+f"{file_count:03d}"+".png")
         
     ####---define train loop---####
-
     def train_loop(self,config, model, noise_scheduler, optimizer, train_dataloader, lr_scheduler):
         # Initialize accelerator and tensorboard logging
         accelerator = Accelerator(

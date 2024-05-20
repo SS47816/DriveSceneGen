@@ -27,14 +27,12 @@ def get_logger(logger_name: str, level: int = logging.ERROR) -> logging.Logger:
 def get_cache_name(parent_dir: str, child_dir: str) -> str:
     return os.path.join(parent_dir, f'{child_dir}_cached_filenames.pkl')
 
-
 def cache_all_filenames(parent_dir: str, child_dir: str) -> str:
     filenames = glob.glob(os.path.join(parent_dir, child_dir + '/*'))
     cache = get_cache_name(parent_dir, child_dir)
     with open(cache, 'wb') as f:
         pickle.dump(filenames, f)
     return cache
-
 
 def get_all_filenames(parent_dir: str, child_dir: str) -> list:
     cache = get_cache_name(parent_dir, child_dir)

@@ -30,8 +30,6 @@ def gaussian_kernel(X: np.ndarray, Y: np.ndarray, sigma: float = 1.0) -> np.ndar
 def mmd(X: np.ndarray, Y: np.ndarray, sigma: float = 1.0, dist_function: str = None) -> float:
     K_XX = gaussian_kernel(X, X, sigma)
     K_YY = gaussian_kernel(Y, Y, sigma)
-    # K_XY = gaussian_kernel(X, Y, sigma)
-    # K_YX = gaussian_kernel(Y, X, sigma)
     
     mean_x = np.mean(K_XX, axis=0)
     mean_y = np.mean(K_YY, axis=0)
@@ -255,18 +253,7 @@ def compute_track_stats(track_files: list, metrics_dir: str) -> np.ndarray:
         # Transform to local coordinates centered around sdc
         curr_trajs[:, :3] = curr_trajs[:, :3] - curr_trajs[sdc_id, :3]
         # print(f"totally {n} agents, filtered to {curr_trajs.shape[0]} valid vehicles")
-        
-        # stats = curr_trajs[:, [0, 1, 3, 4, 6]] # [x, y, l, w, heading, v_x, v_y]
-        # dists = np.hypot(curr_trajs[:, 0], curr_trajs[:, 1])
-        # sizes = np.hypot(curr_trajs[:, 3], curr_trajs[:, 4])
-        # speeds = np.hypot(curr_trajs[:, 6], curr_trajs[:, 7])
-        
-        # stats = np.concatenate((curr_trajs[:, :2], dists[:, np.newaxis], 
-        #                         curr_trajs[:, 3:5], sizes[:, np.newaxis], 
-        #                         curr_trajs[:, 6, np.newaxis], speeds[:, np.newaxis]),
-        #                        axis=1) # [x, y, dist, l, w, size, heading, speed, n]
-        # all_tracks.append(np.append(np.mean(stats, axis=0), curr_trajs.shape[0])) # [x, y, dist, l, w, size, heading, speed, n]
-        # all_tracks.append(curr_trajs)
+
         all_tracks.append(np.mean(curr_trajs[:, :9], axis=0))
         
     all_tracks_np = np.vstack(all_tracks) # [M, 9], [x, y, z, l, w, h, heading, v_x, v_y]
@@ -281,70 +268,3 @@ def compute_track_stats(track_files: list, metrics_dir: str) -> np.ndarray:
     # print(f'mins: {mins}')
 
     return all_tracks_np # [M, 9], [x, y, z, l, w, h, heading, v_x, v_y]
-
-
-# def compute_agent_metrics(gt_agent_files: list, gen_agent_files: list) -> None:
-#     gt_stats = compute_agent_stats(gt_agent_files)
-#     gen_stats = compute_agent_stats(gen_agent_files)
-    
-#     print(gt_stats.shape)
-#     print(gen_stats.shape)
-#     print(gt_stats)
-#     print(gen_stats)
-#     print(np.abs(gt_stats - gen_stats))
-    
-#     return
-
-
-# def compute_trajectory_collision_rate(trajs: np.ndarray) -> float:
-#     rate = 0.0
-    
-#     collide_idx = np.zeros(pred.shape[0])
-#     for i in range(pred.shape[0]):
-#         agent = WaymoAgent(pred[[i]])
-#         polygons = agent.get_polygon()
-#         for idx, poly in enumerate(polygons):
-#             for ano_idx, another_poly in enumerate(polygons):
-#                 if poly.intersects(another_poly) and idx != ano_idx:
-#                     collide_idx[idx] = 1
-
-#     return np.mean(collide_idx)
-    
-#     return rate
-
-
-def compute_vehicle_placement_metrics(gt_track_files: list, gen_agent_files: list, gt_metrics_dir: str, gen_metrics_dir: str) -> None:
-    gt_agents = compute_track_stats(gt_track_files, gt_metrics_dir)
-    gen_agents = compute_agent_stats(gen_agent_files, gen_metrics_dir)
-    # gt_agents = np.load(os.path.join(gt_metrics_dir, 'agents.npy'))
-    # gen_agents = np.load(os.path.join(gen_metrics_dir, 'agents.npy'))
-    
-    print(gt_agents.shape) # [M, 9], [x, y, z, l, w, h, heading, v_x, v_y]
-    print(gen_agents.shape) # [M, 9], [x, y, z, l, w, h, heading, v_x, v_y]
-    # print(gt_agents) 
-    # print(gen_agents) 
-    
-    mmd_position = mmd(gt_agents[:, :2].reshape(-1, 2), gen_agents[:, :2].reshape(-1, 2), dist_function = 'tvd')
-    print(f'mmd_position: {mmd_position}')
-    mmd_heading = mmd(gt_agents[:, -3].reshape(-1, 1), gen_agents[:, -3].reshape(-1, 1), dist_function = 'tvd')
-    print(f'mmd_heading: {mmd_heading}')
-    mmd_speed = mmd(gt_agents[:, -2:].reshape(-1, 2), gen_agents[:, -2:].reshape(-1, 2), dist_function = 'tvd')
-    print(f'mmd_speed: {mmd_speed}')
-    mmd_size = mmd(gt_agents[:, 3:5].reshape(-1, 2), gen_agents[:, 3:5].reshape(-1, 2), dist_function = 'tvd')
-    print(f'mmd_size: {mmd_size}')
-
-    return
-
-
-# def compute_track_metrics(gt_track_files: list, gen_track_files: list) -> None:
-#     gt_stats = compute_track_stats(gt_track_files)
-#     # gen_stats = compute_track_stats(gen_track_files)
-    
-#     print(gt_stats.shape)
-#     # print(gen_stats.shape)
-#     print(gt_stats)
-#     # print(gen_stats)
-#     mmd_value = mmd(X, Y, dist_function = 'tvd')
-#     # print(np.abs(gt_stats - gen_stats))
-
-#     return

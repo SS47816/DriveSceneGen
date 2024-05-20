@@ -24,9 +24,6 @@ import bisect
 # 3. save the vector map to tensor map
 """
 
-    
-     
-    
 def generate_desired_type_polylines_list(all_points, point_sampled_interval=1.0, 
                                           points_break_dist_thresh=1.0,
                                           desired_map_type_list=[2],
@@ -197,10 +194,9 @@ def cut_polyline_for_end_point(polylines_list,filter_distance:int=40):
         polylines_splited=[poly for poly in polylines_splited if len(poly)>=3]
         polylines_list.extend(polylines_splited)
         
-  
-                                   
-            
     return polylines_list
+
+
 def cal_curvature_and_cut(polylines_list: np.ndarray):
     """
     1. input is a list of polylines

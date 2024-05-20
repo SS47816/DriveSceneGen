@@ -1,0 +1,8 @@
+version: 1
+n_proccess: 8 # Numer of available processors
+
+vectoriztion:
+    map_range: 80
+    img_res: 256
+    method: "GRAPH_FIT"
+    plot: True

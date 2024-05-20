@@ -4,13 +4,8 @@ import argparse
 import tensorflow as tf
 import pickle
 import numpy as np
-# import matplotlib as mpl
-# import matplotlib.pyplot as plt
 from tqdm import tqdm
-from shapely.geometry import LineString, Point, Polygon
-from shapely.affinity import affine_transform, rotate
 from waymo_open_dataset.protos import scenario_pb2
-
 
 from multiprocessing import Pool
 from DriveSceneGen.utils.datasets.waymo.data_utils import *
@@ -209,9 +204,9 @@ def multiprocessing(data_files):
 
 if __name__ == "__main__":
     # Arguments
-    parser = argparse.ArgumentParser(description='Data Processing 2')
+    parser = argparse.ArgumentParser(description='Data Processing 1')
     parser.add_argument('--load_path',default="./data/raw", type=str, help='path to dataset files')
-    parser.add_argument('--save_path', default="./data/processed/stage1",type=str, help='path to save processed data')
+    parser.add_argument('--save_path', default="./data/preprocessed",type=str, help='path to save processed data')
     parser.add_argument('--use_multiprocessing', help='if use multiprocessing', default=True)
     
     
@@ -221,15 +216,13 @@ if __name__ == "__main__":
     os.makedirs(save_path, exist_ok=True)
     
     if args.use_multiprocessing:
-        # print("!!!!!!!!!!!!!!!!!!!!!")
         with Pool() as p:
             results = p.map(multiprocessing, data_files)
             ret_info = [item for sublist in results for item in sublist]
-            test_filename = os.path.join('./data/processed/stage1', 'processed_scenarios_20s.pkl')
+            test_filename = os.path.join('./data/preprocessed', 'processed_scenarios_20s.pkl')
             with open(test_filename, 'wb') as f:
                 pickle.dump(ret_info, f)
     else:
-        # print("?????????????????????")
         processor = DataProcess(data_files) 
         processor.process_data(save_path, viz=True)
         print('Done!')

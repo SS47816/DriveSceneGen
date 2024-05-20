@@ -1,0 +1,10 @@
+version: 1
+n_proccess: 8 # Numer of available processors
+
+rasterization:
+    map_range: 80
+    img_res: 512
+    resize: False
+    scatter_size: 0.15
+    with_agent: True
+    scatter_as_line: True

@@ -767,18 +767,3 @@ def extract_polylines_from_img(img_color: Image, img_gray: Image=None, map_range
             plt.show()
 
     return output, directed_graph
-
-
-if __name__ == '__main__':
-
-    # 80m ground truth dataset
-    img_id = 1
-    color_file = f'samples/gt/80m/0_{img_id}.png'
-    img_color = Image.open(color_file)
-    polylines_world = extract_polylines_from_img(img_color, map_range=80)
-
-    # 120m ground truth dataset
-    # img_id = 0
-    # color_file = f'samples/gt/120m/0_{img_id}.png'
-    # img_color = Image.open(color_file)
-    # polylines_world = extract_polylines_from_img(img_color, map_range=120)

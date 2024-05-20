@@ -488,12 +488,6 @@ def extract_polylines_from_img(img_color: Image, img_gray: Image=None, map_range
             axes[4].plot(xs, ys)
             axes[4].title.set_text('Paths between Inlets and Outlets')
 
-            # dx = np.diff(path[:, 0])
-            # dy = np.diff(path[:, 1])
-            # dx, dy = graph_utils.normalize_dx_dy(dx, dy)
-            # axes[4].quiver(xs[:-1], ys[:-1], dx, dy, color='g', angles='xy', scale_units='xy', scale=0.1)
-            # axes[4].title.set_text('Directions at branch nodes')
-
     #################################### Graph Reduction ####################################
 
     # 6. Simplify the graph
@@ -559,22 +553,6 @@ def extract_polylines_from_img(img_color: Image, img_gray: Image=None, map_range
             axes[8].plot(xs, ys, c=colors[i])
         axes[8].title.set_text('Verified Graph')
 
-    # 8. Plot all shortest paths
-    # if plot:
-    #     paths, path_waypoints = find_paths_among_terminals(graph, inlets, outlets)
-    #     colors = graph_utils.generate_random_colors(len(paths))
-    #     for i, path in enumerate(path_waypoints):
-    #         path = np.array(path, dtype=float)
-    #         xs = path[:, 0]
-    #         ys = path[:, 1]
-    #         axes[8].plot(xs, ys, c=colors[i])
-
-    #         dx = np.diff(path[:, 0])
-    #         dy = np.diff(path[:, 1])
-    #         dx, dy = graph_utils.normalize_dx_dy(dx, dy)
-    #         axes[8].quiver(xs[:-1], ys[:-1], dx, dy, color='r', angles='xy', scale_units='xy', scale=0.1)
-    #         axes[8].title.set_text('Shortest Paths between Inlets and Outlets')
-
     #################################### Convert to World Frame ####################################
     polylines = graph_utils.graph_to_polylines(graph)
     polylines_world = graph_utils.polylines_to_world_frame(polylines, skel.shape, map_range=map_range)
@@ -587,18 +565,3 @@ def extract_polylines_from_img(img_color: Image, img_gray: Image=None, map_range
             plt.show()
 
     return output, graph
-
-
-if __name__ == '__main__':
-
-    # 80m ground truth dataset
-    img_id = 1
-    color_file = f'samples/gt/80m/0_{img_id}.png'
-    img_color = Image.open(color_file)
-    polylines_world = extract_polylines_from_img(img_color, map_range=80)
-
-    # 120m ground truth dataset
-    # img_id = 0
-    # color_file = f'samples/gt/120m/0_{img_id}.png'
-    # img_color = Image.open(color_file)
-    # polylines_world = extract_polylines_from_img(img_color, map_range=120)

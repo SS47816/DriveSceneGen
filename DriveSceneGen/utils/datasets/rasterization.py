@@ -11,6 +11,7 @@ from DriveSceneGen.utils.datasets.map_processing import (dxdy_normalization,
                                   transform_scenario)
 from DriveSceneGen.utils.datasets.visualization import plot_dynamic_objects_v2
 from DriveSceneGen.utils.datasets.vector_normalization import generate_desired_type_polylines_list
+
 def rasterize_static_map(
     scenario_info: dict,
     img_res: tuple = (512, 512),
@@ -18,7 +19,7 @@ def rasterize_static_map(
     map_range: float = 100.0,
     des_row_size: int = 100,
     output_img_path: str = None,
-    with_vehicle_rectangle = False,
+    with_agent = False,
     scatter_as_line = True,
     resize = False,
     scatter_size = 1.5,
@@ -169,7 +170,7 @@ def rasterize_static_map(
             fig_2_tensor=transform(fig_2_tensor)
 
         #plot dynamic objects
-        if with_vehicle_rectangle:
+        if with_agent:
             fig_2_tensor = fig_2_tensor[:2, :, :]
             t_step = 1
             traj_tensor = plot_dynamic_objects_v2(
