@@ -1,10 +1,10 @@
 # DriveSceneGen
 
-**[[Paper](https://arxiv.org/abs/2309.14685)] [[Project Page](https://ss47816.github.io/DriveSceneGen/)] [[Code](https://github.com/SS47816/DriveSceneGen)]**
+**[[Paper](https://ieeexplore.ieee.org/abstract/document/10565975)] [[arXiv](https://arxiv.org/abs/2309.14685)] [[Project Page](https://ss47816.github.io/DriveSceneGen/)] [[Code](https://github.com/SS47816/DriveSceneGen)]**
+
+## [RA-L 2024] DriveSceneGen: Generating Diverse and Realistic Driving Scenarios from Scratch
 
 ![Alt text](media/cover_white.png)
-
-## DriveSceneGen: Generating Diverse and Realistic Driving Scenarios from Scratch
 
 _Shuo Sun<sup>†</sup>, Zekai Gu<sup>†</sup>, Tianchen Sun<sup>†</sup>, Jiawei Sun, Chengran Yuan, Yuhang Han, Dongen Li, and Marcelo H. Ang Jr._
 
@@ -73,13 +73,15 @@ make pip-install
 
 If you find our work interesting, please consider citing our paper:
 
-    @misc{sun2023drivescenegen,
-        title={DriveSceneGen: Generating Diverse and Realistic Driving Scenarios from Scratch},
-        author={Shuo Sun and Zekai Gu and Tianchen Sun and Jiawei Sun and Chengran Yuan and Yuhang Han and Dongen Li and Marcelo H. Ang Jr au2},
-        year={2023},
-        eprint={2309.14685},
-        archivePrefix={arXiv},
-        primaryClass={cs.RO}
+    @ARTICLE{sun2024drivescenegen,
+        author={Sun, Shuo and Gu, Zekai and Sun, Tianchen and Sun, Jiawei and Yuan, Chengran and Han, Yuhang and Li, Dongen and Ang, Marcelo H.},
+        journal={IEEE Robotics and Automation Letters}, 
+        title={DriveSceneGen: Generating Diverse and Realistic Driving Scenarios From Scratch}, 
+        year={2024},
+        volume={9},
+        number={8},
+        pages={7007-7014},
+        doi={10.1109/LRA.2024.3416792}
     }
 
 ## License
